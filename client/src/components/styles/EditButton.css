@@ -1,0 +1,12 @@
+.edit-button{
+    position: relative;
+}
+.edit-button::before{
+    content: "";
+    width: 10px;
+    height: 1px;
+    background-color: #0d6efd;
+    position: absolute;
+    top: 50%;
+    left: -10px;
+}

@@ -3,14 +3,20 @@ const express = require("express");
 const mongoose = require("mongoose");
 const AdminsModel = require("./models/Admins");
 const UsersModel = require("./models/Users");
+require("dotenv").config();
+
+const dbUrl = process.env.DB_URL;
+const port = process.env.PORT;
+
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
-mongoose.connect(
-    "mongodb+srv://bondok:PQHDE6my3bPnknrd@cluster0.0wlbg8g.mongodb.net/ninu"
-);
+mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true });
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "MongoDB connection error:"));
+db.once("open", () => console.log("Connected to MongoDB"));
 
 app.post("/login", async (req, res) => {
     try {
@@ -30,8 +36,6 @@ app.post("/login", async (req, res) => {
             user = await UserModel.findOne({
                 "userRegistration.username": username,
             });
-        } else {
-            return res.status(400).json({ message: "Invalid role" });
         }
 
         // If user is not found
@@ -44,7 +48,7 @@ app.post("/login", async (req, res) => {
         }else if (role === "admin" && password === user.password) {
             return res.json({ message: "Login successful", user});
         } else {
-            return res.status(401).json({ message: "Incorrect password" });
+            return res.status(401).json({ message: "Incorrect username or password" });
         }
     } catch (error) {
         console.error("Error logging in:", error);
@@ -52,10 +56,11 @@ app.post("/login", async (req, res) => {
     }
 });
 
-app.get("/user/:id", (req, res) => {
+app.get("/user/:id", async  (req, res) => {
     const { id } = req.params;
 
-    UsersModel.findById(id)
+    await UsersModel
+        .findById(id)
         .then((user) => {
             if (user) {
                 res.json(user);
@@ -68,9 +73,10 @@ app.get("/user/:id", (req, res) => {
         });
 });
 
-app.get("/users", (req, res) => {
+app.get("/users", async  (req, res) => {
     // Retrieve all users from the database
-    UsersModel.find({})
+    await UsersModel
+        .find({})
         .then((users) => {
             res.json(users);
         })
@@ -79,9 +85,10 @@ app.get("/users", (req, res) => {
         });
 });
 
-app.delete("/deleteUser/:id", (req, res) => {
+app.delete("/deleteUser/:id", async  (req, res) => {
     const { id } = req.params;
-    UsersModel.findByIdAndDelete(id)
+    await UsersModel
+        .findByIdAndDelete(id)
         .then(() => {
             res.json("User deleted successfully!");
         })
@@ -90,10 +97,11 @@ app.delete("/deleteUser/:id", (req, res) => {
         });
 });
 
-app.get("/userDetails/:id", (req, res) => {
+app.get("/userDetails/:id", async  (req, res) => {
     const { id } = req.params;
 
-    UsersModel.findById(id)
+    await UsersModel
+        .findById(id)
         .then((user) => {
             if (user) {
                 res.json(user);
@@ -156,6 +164,6 @@ app.post("/admin/addUser", async (req, res) => {
     }
 });
 
-app.listen(3001, () => {
+app.listen(port, () => {
     console.log("Server listining on http://127.0.0.1:3001");
 });
