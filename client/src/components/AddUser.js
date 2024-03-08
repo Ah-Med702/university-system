@@ -147,7 +147,10 @@ const AddUser = () => {
                                         htmlFor={fieldName}
                                         className="form-label"
                                     >
-                                        {fieldName}:
+                                        {fieldName
+                                            .replace(/([a-z])([A-Z])/g, "$1 $2")
+                                            .toLowerCase()}
+                                        :
                                     </label>
                                     {/* Render select dropdowns for religion and gender */}
                                     {(fieldName === "birthdate" && (

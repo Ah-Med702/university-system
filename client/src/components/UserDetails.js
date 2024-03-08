@@ -112,11 +112,17 @@ const UserDetails = () => {
                                         className="mb-3 col-12 col-sm-6 col-md-4 col-lg-3"
                                     >
                                         <label className="form-label">
-                                            {fieldName}:
+                                            {fieldName
+                                                .replace(
+                                                    /([a-z])([A-Z])/g,
+                                                    "$1 $2"
+                                                )
+                                                .toLowerCase()}
+                                            :
                                         </label>
                                         <div className="d-flex gap-2">
                                             {fieldName === "role" ? (
-                                                <span className="form-control">
+                                                <span className="form-control bg-body-secondary">
                                                     {fieldValue}
                                                 </span>
                                             ) : editableField &&
