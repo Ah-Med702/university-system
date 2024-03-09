@@ -6,12 +6,12 @@ import "./styles/Blur.css";
 
 const Admin = () => {
     const [users, setUsers] = useState([]);
-    const [deletedUser, setDeletedUser] = useState(null);
+    const [, setDeletedUser] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const navigate = useNavigate();
 
-const API = "https://bondok-university-system-server.vercel.app";
+    const API = "https://bondok-university-system-server.vercel.app";
 
     useEffect(() => {
         const adminData = sessionStorage.getItem("adminData");
@@ -57,6 +57,8 @@ const API = "https://bondok-university-system-server.vercel.app";
     };
 
     const deleteUser = (id) => {
+        let deletedUser;
+
         Swal.fire({
             icon: "warning",
             title: "Are you sure?",
@@ -69,6 +71,7 @@ const API = "https://bondok-university-system-server.vercel.app";
             if (result.isConfirmed) {
                 axios.delete(`${API}/deleteUser/${id}`).then(() => {
                     const userToDelete = users.find((user) => user._id === id);
+                    deletedUser = userToDelete;
                     setDeletedUser(userToDelete);
                     getUsers();
                     Swal.fire({
@@ -107,96 +110,130 @@ const API = "https://bondok-university-system-server.vercel.app";
         });
     };
 
+    const handleLogout = () => {
+        Swal.fire({
+            title: "Logout",
+            text: "Are you sure you want to logout?",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Yes, logout",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                logout();
+            }
+        });
+    };
+
     const logout = () => {
         sessionStorage.removeItem("adminData");
         navigate("/login");
     };
 
     return (
-        <div className={isModalOpen ? "blur-container" : ""}>
-            <nav className="navbar navbar-expand-lg navbar-light bg-light">
-                <div className="container-fluid">
-                    <Link className="navbar-brand" to="#">
-                        Admin Panel
-                    </Link>
-                    <button
-                        className="navbar-toggler"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#navbarNav"
-                        aria-controls="navbarNav"
-                        aria-expanded="false"
-                        aria-label="Toggle navigation"
-                    >
-                        <span className="navbar-toggler-icon"></span>
-                    </button>
-                    <div className="collapse navbar-collapse" id="navbarNav">
-                        <ul className="navbar-nav ms-auto">
-                            <li className="nav-item">
-                                <button
-                                    className="nav-link btn btn-link"
-                                    onClick={logout}
-                                >
-                                    Logout
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </nav>
-            <div className="row p-3">
-                <div>
-                    <div className="header d-flex align-items-center justify-content-between">
-                        <h3>Registered Users</h3>
-                        <Link to="/admin/addUser" className="btn btn-primary">
-                            Add User
+        <div className="admin-page">
+            <div className={isModalOpen ? "blur-container" : ""}>
+                <nav className="navbar navbar-expand-lg navbar-light bg-light">
+                    <div className="container-fluid">
+                        <Link className="navbar-brand" to="#">
+                            Admin Panel
                         </Link>
+                        <button
+                            className="navbar-toggler"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#navbarNav"
+                            aria-controls="navbarNav"
+                            aria-expanded="false"
+                            aria-label="Toggle navigation"
+                        >
+                            <span className="navbar-toggler-icon"></span>
+                        </button>
+                        <div
+                            className="collapse navbar-collapse"
+                            id="navbarNav"
+                        >
+                            <ul className="navbar-nav ms-auto">
+                                <li className="nav-item">
+                                    <button
+                                        className="btn btn-outline-danger"
+                                        onClick={handleLogout}
+                                    >
+                                        Logout
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
-                    {isLoading ? (
-                        <div>Loading...</div>
-                    ) : (
-                        <table className="table">
-                            <thead>
-                                <tr>
-                                    <th>Username</th>
-                                    <th>Password</th>
-                                    <th>Role</th>
-                                    <th>Action</th>
-                                    <th>Details</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {users.map((user) => (
-                                    <tr key={user._id}>
-                                        <td>
-                                            {user.userRegistration.username}
-                                        </td>
-                                        <td>
-                                            {user.userRegistration.password}
-                                        </td>
-                                        <td>{user.userRegistration.role}</td>
-                                        <td>
-                                            <button
-                                                className="btn btn-danger btn-sm"
-                                                onClick={() =>
-                                                    deleteUser(user._id)
-                                                }
-                                            >
-                                                Delete
-                                            </button>
-                                        </td>
-                                        <td>
-                                            <Link
-                                                to={`/userDetails/${user._id}`}
-                                            >
-                                                Details
-                                            </Link>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    )}
+                </nav>
+                <div className="container-fluid p-3">
+                    <div className="row">
+                        <div className="col">
+                            <div className="header d-flex align-items-center justify-content-between">
+                                <h3>Registered Users</h3>
+                                <Link
+                                    to="/admin/addUser"
+                                    className="btn btn-primary"
+                                >
+                                    Add User
+                                </Link>
+                            </div>
+                            {isLoading ? (
+                                <div>Loading...</div>
+                            ) : (
+                                <table className="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Username</th>
+                                            <th>Password</th>
+                                            <th>Role</th>
+                                            <th>Action</th>
+                                            <th>Details</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {users.map((user) => (
+                                            <tr key={user._id}>
+                                                <td>
+                                                    {
+                                                        user.userRegistration
+                                                            .username
+                                                    }
+                                                </td>
+                                                <td>
+                                                    {
+                                                        user.userRegistration
+                                                            .password
+                                                    }
+                                                </td>
+                                                <td>
+                                                    {user.userRegistration.role}
+                                                </td>
+                                                <td>
+                                                    <button
+                                                        className="btn btn-danger btn-sm"
+                                                        onClick={() =>
+                                                            deleteUser(user._id)
+                                                        }
+                                                    >
+                                                        Delete
+                                                    </button>
+                                                </td>
+                                                <td>
+                                                    <Link
+                                                        to={`/userDetails/${user._id}`}
+                                                    >
+                                                        Details
+                                                    </Link>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            )}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

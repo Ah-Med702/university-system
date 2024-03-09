@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 import PasswordInput from "./tools/password";
+import "./styles/LoginPage.css";
 import "./styles/Loading.css";
-
 
 const Login = () => {
     const [username, setUsername] = useState("");
@@ -73,66 +73,78 @@ const Login = () => {
     };
 
     return (
-        <div
-            className="d-flex justify-content-center align-items-center text-center vh-100"
-            style={{
-                backgroundImage:
-                    "linear-gradient(#00d5ff,#0095ff,rgba(93,0,255,.555))",
-            }}
-        >
-            <div
-                className="form-container bg-white p-3 rounded"
-                style={{ width: "40%" }}
-            >
-                {loading && <div className="loading"></div>}
-                <h2 className="mb-3 text-primary">Login</h2>
-                <form onSubmit={handleSubmit}>
-                    <div className="mb-3 text-start">
-                        <label htmlFor="username" className="form-label">
-                            <strong>Username</strong>
-                        </label>
-                        <input
-                            type="text"
-                            placeholder="Enter username"
-                            className="form-control"
-                            id="username"
-                            onChange={(event) =>
-                                setUsername(event.target.value)
-                            }
-                            required
-                        />
+        <div className="login-page">
+            <div className="container-fluid">
+                <div className="row justify-content-center align-items-center vh-100">
+                    <div className="col-sm-10 col-md-8 col-lg-6">
+                        <div className="form-container bg-white shadow p-3 rounded">
+                            {loading && <div className="loading"></div>}
+                            <h2 className="mb-3 text-primary text-center">
+                                Login
+                            </h2>
+                            <form onSubmit={handleSubmit}>
+                                <div className="mb-3">
+                                    <label
+                                        htmlFor="username"
+                                        className="form-label"
+                                    >
+                                        <strong>Username</strong>
+                                    </label>
+                                    <input
+                                        type="text"
+                                        placeholder="Enter username"
+                                        className="form-control"
+                                        id="username"
+                                        onChange={(event) =>
+                                            setUsername(event.target.value)
+                                        }
+                                        required
+                                    />
+                                </div>
+                                <div className="mb-3">
+                                    <label
+                                        htmlFor="password"
+                                        className="form-label"
+                                    >
+                                        <strong>Password</strong>
+                                    </label>
+                                    <PasswordInput
+                                        value={password}
+                                        onChange={(event) =>
+                                            setPassword(event.target.value)
+                                        }
+                                    />
+                                </div>
+                                <div className="mb-3">
+                                    <label
+                                        htmlFor="exampleDropdownSelect1"
+                                        className="form-label"
+                                    >
+                                        <strong>Role</strong>
+                                    </label>
+                                    <select
+                                        className="form-select"
+                                        id="exampleDropdownSelect1"
+                                        onChange={(event) =>
+                                            setRole(event.target.value)
+                                        }
+                                    >
+                                        <option value="user">User</option>
+                                        <option value="admin">Admin</option>
+                                    </select>
+                                </div>
+                                <div className="d-grid">
+                                    <button
+                                        type="submit"
+                                        className="btn btn-primary"
+                                    >
+                                        Login
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                    <div className="mb-3 text-start">
-                        <label htmlFor="password" className="form-label">
-                            <strong>Password</strong>
-                        </label>
-                        <PasswordInput
-                            value={password}
-                            onChange={(event) =>
-                                setPassword(event.target.value)
-                            }
-                        />
-                    </div>
-                    <div className="mb-3 text-start">
-                        <label
-                            htmlFor="exampleDropdownSelect1"
-                            className="form-label"
-                        >
-                            <strong>Role</strong>
-                        </label>
-                        <select
-                            className="form-select"
-                            id="exampleDropdownSelect1"
-                            onChange={(event) => setRole(event.target.value)}
-                        >
-                            <option value="user">User</option>
-                            <option value="admin">Admin</option>
-                        </select>
-                    </div>
-                    <button type="submit" className="btn btn-primary">
-                        Login
-                    </button>
-                </form>
+                </div>
             </div>
         </div>
     );

@@ -1,0 +1,8 @@
+/* CSS */
+.login-page .container-fluid {
+    background: linear-gradient(to right, #00d5ff, #0095ff, rgba(93, 0, 255, 0.555));
+}
+
+.form-container {
+    max-width: 600px;
+}

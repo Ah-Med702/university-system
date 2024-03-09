@@ -9,7 +9,6 @@ const dbUrl =
     "mongodb+srv://bondok:PQHDE6my3bPnknrd@cluster0.0wlbg8g.mongodb.net/ninu";
 const port = "3001";
 
-
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -46,10 +45,12 @@ app.post("/login", async (req, res) => {
 
         if (role === "user" && password === user.userRegistration.password) {
             return res.json({ message: "Login successful", user });
-        }else if (role === "admin" && password === user.password) {
-            return res.json({ message: "Login successful", user});
+        } else if (role === "admin" && password === user.password) {
+            return res.json({ message: "Login successful", user });
         } else {
-            return res.status(401).json({ message: "Incorrect username or password" });
+            return res
+                .status(401)
+                .json({ message: "Incorrect username or password" });
         }
     } catch (error) {
         console.error("Error logging in:", error);
@@ -57,11 +58,10 @@ app.post("/login", async (req, res) => {
     }
 });
 
-app.get("/user/:id", async  (req, res) => {
+app.get("/user/:id", async (req, res) => {
     const { id } = req.params;
 
-    await UsersModel
-        .findById(id)
+    await UsersModel.findById(id)
         .then((user) => {
             if (user) {
                 res.json(user);
@@ -74,10 +74,9 @@ app.get("/user/:id", async  (req, res) => {
         });
 });
 
-app.get("/users", async  (req, res) => {
+app.get("/users", async (req, res) => {
     // Retrieve all users from the database
-    await UsersModel
-        .find({})
+    await UsersModel.find({})
         .then((users) => {
             res.json(users);
         })
@@ -86,10 +85,9 @@ app.get("/users", async  (req, res) => {
         });
 });
 
-app.delete("/deleteUser/:id", async  (req, res) => {
+app.delete("/deleteUser/:id", async (req, res) => {
     const { id } = req.params;
-    await UsersModel
-        .findByIdAndDelete(id)
+    await UsersModel.findByIdAndDelete(id)
         .then(() => {
             res.json("User deleted successfully!");
         })
@@ -98,11 +96,10 @@ app.delete("/deleteUser/:id", async  (req, res) => {
         });
 });
 
-app.get("/userDetails/:id", async  (req, res) => {
+app.get("/userDetails/:id", async (req, res) => {
     const { id } = req.params;
 
-    await UsersModel
-        .findById(id)
+    await UsersModel.findById(id)
         .then((user) => {
             if (user) {
                 res.json(user);
@@ -164,6 +161,38 @@ app.post("/admin/addUser", async (req, res) => {
         res.status(500).json({ message: "Internal Server Error" });
     }
 });
+
+app.put("/change-password/:id", async (req, res) => {
+    const { id } = req.params;
+    const { oldPassword, newPassword } = req.body;
+
+    try {
+        // Find the user by ID
+        const user = await UsersModel.findById(id);
+
+        // Check if the old password matches the current password
+        if (user.userRegistration.password !== oldPassword) {
+            return res.status(401).json({ message: "Incorrect old password" });
+        }
+
+        if (newPassword === oldPassword) {
+            return res.status(401).json({ message: "Please enter a new password" });
+        }
+
+        // Update the password
+        user.userRegistration.password = newPassword;
+        await user.save();
+
+        // Return success message
+        res.json({ message: "Password changed successfully" });
+    } catch (error) {
+        console.error("Error changing password:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
+
+
+
 
 app.listen(port, () => {
     console.log("Server listining on http://127.0.0.1:3001");

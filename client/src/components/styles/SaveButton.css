@@ -1,8 +1,8 @@
-.save-button {
+.user-details .save-button {
     position: relative;
 }
 
-.save-button::before {
+.user-details .save-button::before {
     content: "";
     width: 10px;
     height: 1px;
