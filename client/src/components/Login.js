@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 import PasswordInput from "./tools/password";
 import "./styles/Loading.css";
 
+
 const Login = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -12,7 +13,7 @@ const Login = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
-    const API = process.env.API;
+    const API = "https://bondok-university-system-server.vercel.app";
 
     useEffect(() => {
         document.title = "Login Page";

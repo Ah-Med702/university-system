@@ -11,8 +11,8 @@ const User = () => {
     const { id } = useParams();
     const [userData, setUserData] = useState({});
 
-    const API = process.env.API;
-
+    const API = "https://bondok-university-system-server.vercel.app";
+    
     useEffect(() => {
         document.title = "User Page";
     }, []);
@@ -28,7 +28,7 @@ const User = () => {
         };
 
         fetchData();
-    }, [API, id]);
+    }, [id]);
 
     useEffect(() => {
         const userData = sessionStorage.getItem("userData");

@@ -6,7 +6,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 const AddUser = () => {
-    const API = process.env.API;
+const API = "https://bondok-university-system-server.vercel.app";
 
     useEffect(() => {
         document.title = "Add user";

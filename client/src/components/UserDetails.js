@@ -11,7 +11,7 @@ const UserDetails = () => {
     const [editableField, setEditableField] = useState(null);
     const inputRef = useRef(null);
 
-    const API = process.env.API;
+const API = "https://bondok-university-system-server.vercel.app";
 
     useEffect(() => {
         document.title = "User details";

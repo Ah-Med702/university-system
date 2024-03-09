@@ -5,8 +5,9 @@ const AdminsModel = require("./models/Admins");
 const UsersModel = require("./models/Users");
 require("dotenv").config();
 
-const dbUrl = process.env.DB_URL;
-const port = process.env.PORT;
+const dbUrl =
+    "mongodb+srv://bondok:PQHDE6my3bPnknrd@cluster0.0wlbg8g.mongodb.net/ninu";
+const port = "3001";
 
 
 const app = express();

@@ -11,7 +11,7 @@ const Admin = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const navigate = useNavigate();
 
-    const API = process.env.API;
+const API = "https://bondok-university-system-server.vercel.app";
 
     useEffect(() => {
         const adminData = sessionStorage.getItem("adminData");
