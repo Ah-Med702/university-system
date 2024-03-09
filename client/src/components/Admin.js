@@ -11,6 +11,8 @@ const Admin = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const navigate = useNavigate();
 
+    const API = process.env.API;
+
     useEffect(() => {
         const adminData = sessionStorage.getItem("adminData");
         if (!adminData) {
@@ -38,7 +40,7 @@ const Admin = () => {
 
     const getUsers = () => {
         axios
-            .get("http://localhost:3001/users")
+            .get(`${API}/users`)
             .then((response) => {
                 setUsers(response.data);
                 setIsLoading(false);
@@ -65,52 +67,42 @@ const Admin = () => {
             confirmButtonText: "Yes, delete it!",
         }).then((result) => {
             if (result.isConfirmed) {
-                axios
-                    .delete(`http://localhost:3001/deleteUser/${id}`)
-                    .then(() => {
-                        const userToDelete = users.find(
-                            (user) => user._id === id
-                        );
-                        setDeletedUser(userToDelete);
-                        getUsers();
-                        Swal.fire({
-                            icon: "success",
-                            title: "Success",
-                            text: "User deleted successfully!",
-                            showCancelButton: true,
-                            confirmButtonColor: "#3085d6",
-                            cancelButtonColor: "#d33",
-                            confirmButtonText: "Undo",
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                axios
-                                    .post(
-                                        "http://localhost:3001/admin/addUser",
-                                        deletedUser
-                                    )
-                                    .then(() => {
-                                        setDeletedUser(null);
-                                        getUsers();
-                                        Swal.fire({
-                                            icon: "success",
-                                            title: "Undo Successful",
-                                            text: "User has been restored!",
-                                        });
-                                    })
-                                    .catch((error) => {
-                                        console.error(
-                                            "Error adding user:",
-                                            error
-                                        );
-                                        Swal.fire({
-                                            icon: "error",
-                                            title: "Error",
-                                            text: "Failed to undo deletion. Please try again later.",
-                                        });
+                axios.delete(`${API}/deleteUser/${id}`).then(() => {
+                    const userToDelete = users.find((user) => user._id === id);
+                    setDeletedUser(userToDelete);
+                    getUsers();
+                    Swal.fire({
+                        icon: "success",
+                        title: "Success",
+                        text: "User deleted successfully!",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Undo",
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            axios
+                                .post(`${API}/admin/addUser`, deletedUser)
+                                .then(() => {
+                                    setDeletedUser(null);
+                                    getUsers();
+                                    Swal.fire({
+                                        icon: "success",
+                                        title: "Undo Successful",
+                                        text: "User has been restored!",
                                     });
-                            }
-                        });
+                                })
+                                .catch((error) => {
+                                    console.error("Error adding user:", error);
+                                    Swal.fire({
+                                        icon: "error",
+                                        title: "Error",
+                                        text: "Failed to undo deletion. Please try again later.",
+                                    });
+                                });
+                        }
                     });
+                });
             }
         });
     };

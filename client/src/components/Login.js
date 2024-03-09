@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 import PasswordInput from "./tools/password";
-import "./styles/Loading.css"
+import "./styles/Loading.css";
 
 const Login = () => {
     const [username, setUsername] = useState("");
@@ -11,6 +11,8 @@ const Login = () => {
     const [role, setRole] = useState("user");
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+
+    const API = process.env.API;
 
     useEffect(() => {
         document.title = "Login Page";
@@ -21,7 +23,7 @@ const Login = () => {
         setLoading(true);
 
         try {
-            const response = await axios.post("http://localhost:3001/login", {
+            const response = await axios.post(`${API}/login`, {
                 username,
                 password,
                 role,

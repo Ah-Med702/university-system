@@ -6,6 +6,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 const AddUser = () => {
+    const API = process.env.API;
 
     useEffect(() => {
         document.title = "Add user";
@@ -99,7 +100,7 @@ const AddUser = () => {
         e.preventDefault();
 
         await axios
-            .post("http://localhost:3001/admin/addUser", userDataForm)
+            .post(`${API}/admin/addUser`, userDataForm)
             .then((result) => {
                 if (result.data === "User already exists") {
                     Swal.fire({

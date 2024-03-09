@@ -11,6 +11,8 @@ const User = () => {
     const { id } = useParams();
     const [userData, setUserData] = useState({});
 
+    const API = process.env.API;
+
     useEffect(() => {
         document.title = "User Page";
     }, []);
@@ -18,9 +20,7 @@ const User = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(
-                    `http://localhost:3001/user/${id}`
-                );
+                const response = await axios.get(`${API}/user/${id}`);
                 setUserData(response.data);
             } catch (error) {
                 console.error("Error fetching user details:", error);
@@ -28,7 +28,7 @@ const User = () => {
         };
 
         fetchData();
-    }, [id]);
+    }, [API, id]);
 
     useEffect(() => {
         const userData = sessionStorage.getItem("userData");

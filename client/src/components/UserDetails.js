@@ -11,6 +11,8 @@ const UserDetails = () => {
     const [editableField, setEditableField] = useState(null);
     const inputRef = useRef(null);
 
+    const API = process.env.API;
+
     useEffect(() => {
         document.title = "User details";
     }, []);
@@ -55,10 +57,7 @@ const UserDetails = () => {
             // Merge the updated field with the existing userData
             const updatedUserData = { ...userData, ...updatedData };
 
-            await axios.put(
-                `http://localhost:3001/userDetails/${id}`,
-                updatedUserData
-            );
+            await axios.put(`${API}/userDetails/${id}`, updatedUserData);
             // Show success message
             Swal.fire({
                 icon: "success",
@@ -82,9 +81,7 @@ const UserDetails = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(
-                    `http://localhost:3001/userDetails/${id}`
-                );
+                const response = await axios.get(`${API}/userDetails/${id}`);
                 setUserData(response.data);
             } catch (error) {
                 console.error("Error fetching user details:", error);
